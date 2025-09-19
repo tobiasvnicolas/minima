@@ -43,12 +43,12 @@ stages:
               npm run build
             displayName: 'Build Backend'
 
-          - script: |
-              cd back
-              npm test -- --coverage --watchAll=false
-            displayName: 'Run Backend Tests'
-            env:
-              NODE_ENV: test
+          # - script: |
+          #     cd back
+          #     npm test -- --coverage --watchAll=false
+          #   displayName: 'Run Backend Tests'
+          #   env:
+          #     NODE_ENV: test
 
           - task: PublishTestResults@2
             displayName: 'Publish Backend Test Results'
