@@ -1,0 +1,41 @@
+{
+  "name": "minima-backend",
+  "version": "1.0.0",
+  "description": "Backend API for Minima project",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "build": "echo 'Build completed - no transpilation needed for Node.js'",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
+  "keywords": ["api", "node", "express"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "4.18.2",
+    "cors": "2.8.5"
+  },
+  "devDependencies": {
+    "jest": "29.7.0",
+    "jest-junit": "16.0.0",
+    "supertest": "6.3.3",
+    "nodemon": "3.0.1"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "collectCoverageFrom": [
+      "src/**/*.js"
+    ],
+    "coverageDirectory": "coverage",
+    "coverageReporters": ["text", "lcov", "cobertura"],
+    "reporters": ["default", "jest-junit"],
+    "testResultsProcessor": "jest-junit"
+  },
+  "jest-junit": {
+    "outputDirectory": "coverage",
+    "outputName": "junit.xml"
+  }
+}

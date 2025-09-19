@@ -1,0 +1,139 @@
+# Azure DevOps Pipeline for Minima Project
+# This pipeline builds and tests both frontend and backend components
+
+trigger:
+  branches:
+    include:
+      - main
+      - develop
+  paths:
+    exclude:
+      - README.md
+      - decisiones.md
+
+# Use self-hosted agent pool
+pool:
+  name: 'Self-Hosted'
+
+variables:
+  # Node.js version to use
+  nodeVersion: '18.x'
+  # Build configuration
+  buildConfiguration: 'Release'
+
+stages:
+  - stage: Build
+    displayName: 'Build and Test'
+    jobs:
+      - job: Backend
+        displayName: 'Backend Build and Test'
+        steps:
+          - task: NodeTool@0
+            displayName: 'Install Node.js'
+            inputs:
+              versionSpec: '$(nodeVersion)'
+
+          - script: |
+              cd back
+              npm ci
+            displayName: 'Install Backend Dependencies'
+
+          - script: |
+              cd back
+              npm run build
+            displayName: 'Build Backend'
+
+          - script: |
+              cd back
+              npm test -- --coverage --watchAll=false
+            displayName: 'Run Backend Tests'
+            env:
+              NODE_ENV: test
+
+          - task: PublishTestResults@2
+            displayName: 'Publish Backend Test Results'
+            inputs:
+              testResultsFormat: 'JUnit'
+              testResultsFiles: 'back/coverage/junit.xml'
+              failTaskOnFailedTests: true
+            condition: succeededOrFailed()
+
+          - task: PublishCodeCoverageResults@1
+            displayName: 'Publish Backend Code Coverage'
+            inputs:
+              codeCoverageTool: 'Cobertura'
+              summaryFileLocation: 'back/coverage/cobertura-coverage.xml'
+              reportDirectory: 'back/coverage/lcov-report'
+            condition: succeededOrFailed()
+
+      - job: Frontend
+        displayName: 'Frontend Build and Test'
+        steps:
+          - task: NodeTool@0
+            displayName: 'Install Node.js'
+            inputs:
+              versionSpec: '$(nodeVersion)'
+
+          - script: |
+              cd front
+              npm ci
+            displayName: 'Install Frontend Dependencies'
+
+          - script: |
+              cd front
+              npm run build
+            displayName: 'Build Frontend'
+
+          - script: |
+              cd front
+              npm test -- --run --coverage
+            displayName: 'Run Frontend Tests'
+
+          - task: PublishTestResults@2
+            displayName: 'Publish Frontend Test Results'
+            inputs:
+              testResultsFormat: 'JUnit'
+              testResultsFiles: 'front/coverage/junit.xml'
+              failTaskOnFailedTests: true
+            condition: succeededOrFailed()
+
+          - task: PublishCodeCoverageResults@1
+            displayName: 'Publish Frontend Code Coverage'
+            inputs:
+              codeCoverageTool: 'Cobertura'
+              summaryFileLocation: 'front/coverage/cobertura-coverage.xml'
+              reportDirectory: 'front/coverage/lcov-report'
+            condition: succeededOrFailed()
+
+          - task: PublishBuildArtifacts@1
+            displayName: 'Publish Frontend Build Artifacts'
+            inputs:
+              pathToPublish: 'front/dist'
+              artifactName: 'frontend-build'
+            condition: succeeded()
+
+  - stage: Deploy
+    displayName: 'Deploy'
+    dependsOn: Build
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+    jobs:
+      - deployment: DeployToStaging
+        displayName: 'Deploy to Staging'
+        environment: 'staging'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - download: current
+                  artifact: frontend-build
+                  displayName: 'Download Frontend Artifacts'
+
+                - script: |
+                    echo "Deploying frontend to staging environment..."
+                    echo "Frontend artifacts downloaded to: $(Pipeline.Workspace)/frontend-build"
+                  displayName: 'Deploy Frontend'
+
+                - script: |
+                    echo "Backend deployment would happen here..."
+                    echo "This could include deploying to Azure App Service, containers, etc."
+                  displayName: 'Deploy Backend'
