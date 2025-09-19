@@ -13,7 +13,7 @@ trigger:
 
 # Use self-hosted agent pool
 pool:
-  name: 'Self-Hosted'
+  name: 'SelfHosted'
 
 variables:
   # Node.js version to use
