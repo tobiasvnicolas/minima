@@ -35,6 +35,15 @@ describe('App Component', () => {
           }
         })
       }
+      if (url.includes('/api/nombres-espana')) {
+        return Promise.resolve({
+          data: {
+            success: true,
+            count: 0,
+            data: []
+          }
+        })
+      }
       return Promise.reject(new Error('Not found'))
     })
 
@@ -71,6 +80,15 @@ describe('App Component', () => {
               version: '1.0.0',
               environment: 'test'
             }
+          }
+        })
+      }
+      if (url.includes('/api/nombres-espana')) {
+        return Promise.resolve({
+          data: {
+            success: true,
+            count: 0,
+            data: []
           }
         })
       }
