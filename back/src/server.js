@@ -1,5 +1,7 @@
 const express = require('express');
 const cors = require('cors');
+const { testConnection, getNombresEspana } = require('./db');
+require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -9,11 +11,13 @@ app.use(cors());
 app.use(express.json());
 
 // Health endpoint
-app.get('/health', (req, res) => {
+app.get('/health', async (req, res) => {
+  const dbConnected = await testConnection();
   res.status(200).json({
     status: 'OK',
     message: 'Backend is running successfully',
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    database: dbConnected ? 'Connected' : 'Disconnected'
   });
 });
 
@@ -26,6 +30,25 @@ app.get('/api/data', (req, res) => {
       environment: process.env.NODE_ENV || 'development'
     }
   });
+});
+
+// Endpoint para obtener nombres de España
+app.get('/api/nombres-espana', async (req, res) => {
+  try {
+    const nombres = await getNombresEspana();
+    res.status(200).json({
+      success: true,
+      count: nombres.length,
+      data: nombres
+    });
+  } catch (error) {
+    console.error('Error fetching nombres:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching data from database',
+      error: error.message
+    });
+  }
 });
 
 // Error handling middleware

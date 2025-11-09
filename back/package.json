@@ -11,18 +11,24 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage"
   },
-  "keywords": ["api", "node", "express"],
+  "keywords": [
+    "api",
+    "node",
+    "express"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "4.18.2",
-    "cors": "2.8.5"
+    "cors": "2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^4.21.2",
+    "mysql2": "^3.15.3"
   },
   "devDependencies": {
     "jest": "29.7.0",
     "jest-junit": "16.0.0",
-    "supertest": "6.3.3",
-    "nodemon": "3.0.1"
+    "nodemon": "3.0.1",
+    "supertest": "6.3.3"
   },
   "jest": {
     "testEnvironment": "node",
@@ -30,8 +36,15 @@
       "src/**/*.js"
     ],
     "coverageDirectory": "coverage",
-    "coverageReporters": ["text", "lcov", "cobertura"],
-    "reporters": ["default", "jest-junit"],
+    "coverageReporters": [
+      "text",
+      "lcov",
+      "cobertura"
+    ],
+    "reporters": [
+      "default",
+      "jest-junit"
+    ],
     "testResultsProcessor": "jest-junit"
   },
   "jest-junit": {

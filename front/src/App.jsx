@@ -5,6 +5,7 @@ import './App.css'
 function App() {
   const [backendData, setBackendData] = useState(null)
   const [healthStatus, setHealthStatus] = useState(null)
+  const [nombresEspana, setNombresEspana] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
@@ -21,6 +22,10 @@ function App() {
         // Fetch backend data
         const dataResponse = await axios.get('http://localhost:3001/api/data')
         setBackendData(dataResponse.data)
+
+        // Fetch nombres de España
+        const nombresResponse = await axios.get('http://localhost:3001/api/nombres-espana')
+        setNombresEspana(nombresResponse.data)
 
       } catch (err) {
         console.error('Error fetching data:', err)
@@ -45,6 +50,9 @@ function App() {
 
         const dataResponse = await axios.get('http://localhost:3001/api/data')
         setBackendData(dataResponse.data)
+
+        const nombresResponse = await axios.get('http://localhost:3001/api/nombres-espana')
+        setNombresEspana(nombresResponse.data)
       } catch (err) {
         setError('Failed to connect to backend')
       } finally {
@@ -79,6 +87,7 @@ function App() {
                   <div className="health-status">
                     <p><strong>Status:</strong> {healthStatus.status}</p>
                     <p><strong>Message:</strong> {healthStatus.message}</p>
+                    <p><strong>Database:</strong> {healthStatus.database}</p>
                     <p><strong>Timestamp:</strong> {new Date(healthStatus.timestamp).toLocaleString()}</p>
                   </div>
                 )}
@@ -91,6 +100,42 @@ function App() {
                     <p><strong>Message:</strong> {backendData.message}</p>
                     <p><strong>Version:</strong> {backendData.data?.version}</p>
                     <p><strong>Environment:</strong> {backendData.data?.environment}</p>
+                  </div>
+                )}
+              </div>
+
+              <div className="data-section">
+                <h2>Nombres de España (Consulta SQL)</h2>
+                {nombresEspana && nombresEspana.success && (
+                  <div className="nombres-data">
+                    <p><strong>Registros encontrados:</strong> {nombresEspana.count}</p>
+                    {nombresEspana.data && nombresEspana.data.length > 0 ? (
+                      <table className="data-table">
+                        <thead>
+                          <tr>
+                            <th>Nombre</th>
+                            <th>Género</th>
+                            <th>País</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {nombresEspana.data.map((item, index) => (
+                            <tr key={index}>
+                              <td>{item.Nombre}</td>
+                              <td>{item.Nombre_Genero}</td>
+                              <td>{item.Nombre_Pais}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    ) : (
+                      <p>No se encontraron registros</p>
+                    )}
+                  </div>
+                )}
+                {nombresEspana && !nombresEspana.success && (
+                  <div className="error">
+                    <p>Error: {nombresEspana.message}</p>
                   </div>
                 )}
               </div>

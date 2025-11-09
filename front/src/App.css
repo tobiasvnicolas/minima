@@ -92,6 +92,53 @@
   background-color: #218838;
 }
 
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  margin-top: 15px;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.data-table thead {
+  background-color: #007bff;
+  color: white;
+}
+
+.data-table th {
+  padding: 12px;
+  text-align: left;
+  font-weight: 600;
+}
+
+.data-table td {
+  padding: 12px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.data-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.nombres-data {
+  text-align: left;
+  background-color: white;
+  padding: 15px;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.nombres-data p {
+  margin: 8px 0;
+  line-height: 1.4;
+}
+
 @media (max-width: 768px) {
   .App-header {
     padding: 10px;
@@ -100,5 +147,14 @@
   .data-section {
     margin: 10px 0;
     padding: 15px;
+  }
+  
+  .data-table {
+    font-size: 0.9em;
+  }
+  
+  .data-table th,
+  .data-table td {
+    padding: 8px;
   }
 }
