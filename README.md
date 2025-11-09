@@ -176,4 +176,177 @@ Para que el pipeline funcione correctamente, el agente debe tener:
 3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
 4. Push a la rama (`git push origin feature/AmazingFeature`)
 5. Abre un Pull Request
-estructura minima y funcional de aplicacion
+# Minima Project
+
+Aplicación web con frontend React y backend Node.js + base de datos MySQL.
+
+## 🚀 Quick Start con Docker
+
+```bash
+# Iniciar toda la aplicación
+docker-compose up -d
+
+# Detener
+docker-compose down
+```
+
+- **Frontend**: http://localhost
+- **Backend**: http://localhost:3001
+- **Health Check**: http://localhost:3001/health
+
+## 📋 Prerequisitos
+
+- **Docker Desktop** (Windows/Mac) o Docker Engine (Linux)
+- **MySQL** local (para desarrollo)
+- **Node.js 20.x** (solo para desarrollo local sin Docker)
+
+## 🗄️ Configuración de Base de Datos
+
+1. **Crear la base de datos:**
+   ```sql
+   CREATE DATABASE nom_ape_gen;
+   ```
+
+2. **Importar datos:**
+   ```bash
+   mysql -u root -p nom_ape_gen < db.sql
+   ```
+
+3. **Configurar variables de entorno:**
+   
+   Copia `.env.example` a `.env` y configura:
+   ```env
+   DB_USER=root
+   DB_PASSWORD=tu_password
+   DB_NAME=nom_ape_gen
+   ```
+
+## 🐳 Docker
+
+### Ejecutar con Docker Compose
+
+```bash
+# Construir y ejecutar
+docker-compose up --build
+
+# Ejecutar en segundo plano
+docker-compose up -d
+
+# Ver logs
+docker-compose logs -f
+
+# Detener
+docker-compose down
+```
+
+### Construir imágenes individuales
+
+```bash
+# Backend
+docker build -t minima-backend ./back
+
+# Frontend
+docker build -t minima-frontend ./front
+```
+
+## 💻 Desarrollo Local (sin Docker)
+
+### Backend
+
+```bash
+cd back
+npm install
+npm start          # Producción
+npm run dev        # Desarrollo con hot-reload
+npm test           # Tests
+```
+
+Servidor: http://localhost:3001
+
+### Frontend
+
+```bash
+cd front
+npm install
+npm run dev        # Desarrollo
+npm run build      # Producción
+npm test           # Tests
+```
+
+Servidor: http://localhost:5173 (desarrollo)
+
+## 📡 API Endpoints
+
+- `GET /health` - Estado del servidor y conexión a BD
+- `GET /api/data` - Información básica
+- `GET /api/nombres-espana` - Consulta datos de España desde MySQL
+
+## 🏗️ Estructura del Proyecto
+
+```
+minima/
+├── back/              # Backend Node.js + Express
+│   ├── src/
+│   ├── tests/
+│   ├── Dockerfile
+│   └── package.json
+├── front/             # Frontend React + Vite
+│   ├── src/
+│   ├── Dockerfile
+│   ├── nginx.conf
+│   └── package.json
+├── .github/
+│   └── workflows/     # GitHub Actions CI/CD
+├── docker-compose.yml
+├── azure-pipelines.yml
+└── db.sql
+```
+
+## 🔧 Stack Tecnológico
+
+- **Frontend**: React 18, Vite, Axios
+- **Backend**: Node.js 20, Express, MySQL2
+- **Testing**: Vitest (frontend), Jest (backend)
+- **DevOps**: Docker, GitHub Actions, Azure Pipelines
+- **Database**: MySQL
+
+## 📝 Scripts Disponibles
+
+### Backend
+```bash
+npm start          # Iniciar servidor
+npm run dev        # Desarrollo con nodemon
+npm test           # Tests con Jest
+npm run test:coverage  # Coverage
+```
+
+### Frontend
+```bash
+npm run dev        # Servidor desarrollo
+npm run build      # Build producción
+npm test           # Tests con Vitest
+npm run test:coverage  # Coverage
+```
+
+## 🔐 Seguridad
+
+Los archivos `.env` están ignorados en Git. **Nunca** commitees credenciales.
+
+Archivos seguros para commitear:
+- `.env.example` (plantilla sin credenciales)
+
+## 📦 CI/CD
+
+### GitHub Actions
+- Build y test automático de frontend y backend
+- Construcción de imágenes Docker
+- Push a GitHub Container Registry
+
+### Azure DevOps
+- Pipeline configurado para agente self-hosted
+- Build y test paralelos
+- Publicación de artifacts
+
+## 📄 Licencia
+
+Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para detalles.

@@ -1,0 +1,46 @@
+# Environment variables (SENSITIVE - Database credentials, API keys, etc.)
+.env
+.env.local
+.env.*.local
+
+# Docker
+docker-compose.override.yml
+
+# Node modules
+node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Coverage reports
+coverage/
+*.lcov
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+.cache/
+.tmp/
+
+# Build outputs
+dist/
+build/
+
+# Test outputs
+junit.xml
+test-results/
