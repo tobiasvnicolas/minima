@@ -102,9 +102,15 @@ describe('App Component', () => {
       expect(screen.getByText('Backend Data')).toBeInTheDocument()
     })
 
-    expect(screen.getByText('Status: OK')).toBeInTheDocument()
-    expect(screen.getByText('Message: Hello from Minima Backend!')).toBeInTheDocument()
-    expect(screen.getByText('Version: 1.0.0')).toBeInTheDocument()
+    expect(screen.getByText((content, node) => {
+      return node.textContent === 'Status: OK'
+    })).toBeInTheDocument()
+    expect(screen.getByText((content, node) => {
+      return node.textContent === 'Message: Hello from Minima Backend!'
+    })).toBeInTheDocument()
+    expect(screen.getByText((content, node) => {
+      return node.textContent === 'Version: 1.0.0'
+    })).toBeInTheDocument()
   })
 
   test('displays error when API calls fail', async () => {
