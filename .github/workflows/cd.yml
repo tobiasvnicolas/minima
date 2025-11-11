@@ -1,0 +1,52 @@
+name: CD - Deploy to ECS QA & Prod
+
+on:
+  workflow_run:
+    workflows: ["CI - Build & Push to ECR"]
+    types: [completed]
+
+jobs:
+  deploy-qa:
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'develop' }}
+    runs-on: ubuntu-latest
+    environment: QA
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Deploy to ECS QA
+        run: |
+          aws ecs update-service \
+            --cluster miapp-qa-cluster \
+            --service miapp-qa-service \
+            --force-new-deployment
+      - name: Health check QA
+        run: curl -fsS https://<QA_PUBLIC_URL>/health
+
+  deploy-prod:
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' }}
+    runs-on: ubuntu-latest
+    environment:
+      name: Production
+      url: https://<PROD_PUBLIC_URL>
+    steps:
+      - name: Wait for manual approval
+        run: echo "Manual approval required (GitHub Environment protection)"
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      - name: Deploy to ECS Prod
+        run: |
+          aws ecs update-service \
+            --cluster miapp-prod-cluster \
+            --service miapp-prod-service \
+            --force-new-deployment
+      - name: Health check Prod
+        run: curl -fsS https://<PROD_PUBLIC_URL>/health

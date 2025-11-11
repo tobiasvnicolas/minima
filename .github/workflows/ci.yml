@@ -1,0 +1,53 @@
+name: CI - Build & Push to ECR
+
+on:
+  push:
+    branches: [develop, main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          # Usamos us-east-2 como solicitaste anteriormente
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-2 
+      
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      # --- Construcción y Push del BACKEND ---
+      - name: Build, tag, and push Backend image to ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          # Importante: Usamos el directorio ./back para la construcción
+          docker build -t $ECR_REGISTRY/qa:minima-backend-${IMAGE_TAG} ./back 
+          # Tageamos también como 'latest'
+          docker tag $ECR_REGISTRY/qa:minima-backend-${IMAGE_TAG} $ECR_REGISTRY/qa:minima-backend-latest
+          
+          # Push de ambas tags
+          docker push $ECR_REGISTRY/qa:minima-backend-${IMAGE_TAG}
+          docker push $ECR_REGISTRY/qa:minima-backend-latest
+          
+      # --- Construcción y Push del FRONTEND ---
+      - name: Build, tag, and push Frontend image to ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          # Importante: Usamos el directorio ./front para la construcción
+          docker build -t $ECR_REGISTRY/qa:minima-frontend-${IMAGE_TAG} ./front 
+          # Tageamos también como 'latest'
+          docker tag $ECR_REGISTRY/qa:minima-frontend-${IMAGE_TAG} $ECR_REGISTRY/qa:minima-frontend-latest
+          
+          # Push de ambas tags
+          docker push $ECR_REGISTRY/qa:minima-frontend-${IMAGE_TAG}
+          docker push $ECR_REGISTRY/qa:minima-frontend-latest
