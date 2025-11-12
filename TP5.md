@@ -25,12 +25,12 @@ Como líder técnico, debés:
 ## 📋 Tareas que debés cumplir
 
 ### 1. Configuración de Cloud Resources
-- Crear **servicios cloud** para QA y Producción (Azure Web Apps, AWS EC2/ECS, Google Cloud Run, etc.).  
+- Crear **servicios cloud** para QA y Producción AWS EC2/ECS.  
 - Configurar variables de entorno.  
 - Documentar recursos creados y su propósito.
 
 ### 2. Release Pipeline Configuration
-- Configurar **Release Pipeline** (Azure DevOps, GitHub Actions, AWS CodePipeline, etc.) conectado al Build Pipeline del TP04.  
+- Configurar **Release Pipeline** (GitHub Actions, AWS CodePipeline) conectado al Build Pipeline del TP5.
 - Definir **stages** para QA y Producción con diferentes configuraciones.  
 
 
@@ -48,11 +48,11 @@ Como líder técnico, debés:
 ## 🔧 Pasos sugeridos (checklist)
 
 1. **Cloud Resources**
-   - Crear recursos cloud para QA + PROD (Azure, AWS, GCP, etc.).  
+   - Crear recursos cloud para QA + PROD en AWS.  [Listas las bases de datos qa y prod, y los repositorios]
 2. **Release Pipeline**
-   - Conectar con Build Pipeline, configurar stages QA/PROD.  
+   - Conectar con Build Pipeline, configurar stages QA/PROD.
 3. **Variables y Secrets**
-   - Configurar variables y secretos por entorno.  
+   - Configurar variables y secretos por entorno.
 4. **Aprobaciones**
    - Implementar aprobación manual QA → PROD.  
 5. **Health Checks**
