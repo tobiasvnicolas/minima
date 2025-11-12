@@ -11,42 +11,78 @@ jobs:
     runs-on: ubuntu-latest
     environment: QA
     steps:
+      - uses: actions/checkout@v4 # Necesario para obtener el código
+      
+      # 1. Obtener la TAG del commit que disparó el CI/CD
+      - name: Get SHA Tag
+        id: get_sha
+        run: echo "IMAGE_TAG=$(jq -r '.head_sha' $GITHUB_EVENT_PATH)" >> $GITHUB_ENV
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+          aws-region: us-east-2
 
-      - name: Deploy to ECS QA
-        run: |
-          aws ecs update-service \
-            --cluster miapp-qa-cluster \
-            --service miapp-qa-service \
-            --force-new-deployment
+      # 2. Despliegue de QA: Inyecta la nueva imagen y actualiza el servicio
+      - name: Deploy new images to ECS QA
+        uses: aws-actions/amazon-ecs-deploy@v1
+        with:
+          # VALOR REAL DE QA TASK DEFINITION
+          task-definition: minima-task-definition:1 
+          service: qa-service             
+          cluster: qa-cluster             
+          # Usamos el repo 'qa' y el tag SHA
+          container-names: minima-backend,minima-frontend
+          images: |
+            qa:minima-backend-${{ env.IMAGE_TAG }}
+            qa:minima-frontend-${{ env.IMAGE_TAG }}
+          wait-for-service-stability: true
+          
+      # 3. Health check QA
       - name: Health check QA
-        run: curl -fsS https://<QA_PUBLIC_URL>/health
+        run: curl -fsS https://3.143.168.65/health
 
   deploy-prod:
     if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' }}
     runs-on: ubuntu-latest
     environment:
       name: Production
-      url: https://<PROD_PUBLIC_URL>
+      url: https://3.147.64.109
     steps:
+      - uses: actions/checkout@v4
+      
+      # 1. Obtener la TAG del commit
+      - name: Get SHA Tag
+        id: get_sha
+        run: echo "IMAGE_TAG=$(jq -r '.head_sha' $GITHUB_EVENT_PATH)" >> $GITHUB_ENV
+        
       - name: Wait for manual approval
         run: echo "Manual approval required (GitHub Environment protection)"
+        
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
-      - name: Deploy to ECS Prod
-        run: |
-          aws ecs update-service \
-            --cluster miapp-prod-cluster \
-            --service miapp-prod-service \
-            --force-new-deployment
+          aws-region: us-east-2
+          
+      # 2. Despliegue de Prod: Inyecta la nueva imagen y actualiza el servicio
+      - name: Deploy new images to ECS Prod
+        uses: aws-actions/amazon-ecs-deploy@v1
+        with:
+          # VALOR REAL DE PROD TASK DEFINITION
+          task-definition: minima-prod-task-definition:4
+          service: prod-service
+          cluster: prod-cluster 
+          # Usamos el repo 'prod' y el tag SHA
+          container-names: minima-backend,minima-frontend
+          images: |
+            prod:minima-backend-${{ env.IMAGE_TAG }}
+            prod:minima-frontend-${{ env.IMAGE_TAG }}
+          wait-for-service-stability: true
+          
+      # 3. Health check Prod
       - name: Health check Prod
-        run: curl -fsS https://<PROD_PUBLIC_URL>/health
+        run: curl -fsS https://3.147.64.109/health
