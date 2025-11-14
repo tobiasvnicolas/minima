@@ -11,8 +11,11 @@ jobs:
     runs-on: ubuntu-latest
     environment: QA
     steps:
-      - uses: actions/checkout@v4 # Necesario para obtener el código
-      
+      - uses: actions/checkout@v4 # Necesario para obtener el código --- AAAA
+        with:
+          # FORZAMOS EL CHECKOUT AL SHA DEL COMMIT QUE EJECUTÓ EL CI
+          ref: ${{ github.event.workflow_run.head_sha }}
+          
       # 1. Obtener la TAG del commit que disparó el CI/CD
       - name: Get SHA Tag
         id: get_sha
@@ -27,7 +30,7 @@ jobs:
 
       # 2. Despliegue de QA: Inyecta la nueva imagen y actualiza el servicio
       - name: Deploy new images to ECS QA
-        uses: aws-actions/amazon-ecs-deploy@v1
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           # VALOR REAL DE QA TASK DEFINITION
           task-definition: minima-task-definition:1 
@@ -52,7 +55,10 @@ jobs:
       url: https://3.147.64.109
     steps:
       - uses: actions/checkout@v4
-      
+        with:
+          # FORZAMOS EL CHECKOUT AL SHA DEL COMMIT QUE EJECUTÓ EL CI
+          ref: ${{ github.event.workflow_run.head_sha }}
+          
       # 1. Obtener la TAG del commit
       - name: Get SHA Tag
         id: get_sha
@@ -70,7 +76,7 @@ jobs:
           
       # 2. Despliegue de Prod: Inyecta la nueva imagen y actualiza el servicio
       - name: Deploy new images to ECS Prod
-        uses: aws-actions/amazon-ecs-deploy@v1
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           # VALOR REAL DE PROD TASK DEFINITION
           task-definition: minima-prod-task-definition:4
