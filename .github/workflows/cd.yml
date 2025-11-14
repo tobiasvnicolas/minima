@@ -27,7 +27,7 @@ jobs:
 
       # 2. Despliegue de QA: Inyecta la nueva imagen y actualiza el servicio
       - name: Deploy new images to ECS QA
-        uses: aws-actions/amazon-ecs-deploy@v1
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           # VALOR REAL DE QA TASK DEFINITION
           task-definition: minima-task-definition:1 
@@ -70,7 +70,7 @@ jobs:
           
       # 2. Despliegue de Prod: Inyecta la nueva imagen y actualiza el servicio
       - name: Deploy new images to ECS Prod
-        uses: aws-actions/amazon-ecs-deploy@v1
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           # VALOR REAL DE PROD TASK DEFINITION
           task-definition: minima-prod-task-definition:4
