@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: QA
     steps:
-      - uses: actions/checkout@v4 # Necesario para obtener el código
+      - uses: actions/checkout@v4 # Necesario para obtener el código --- AAAA
         with:
           # FORZAMOS EL CHECKOUT AL SHA DEL COMMIT QUE EJECUTÓ EL CI
           ref: ${{ github.event.workflow_run.head_sha }}
