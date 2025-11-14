@@ -21,7 +21,7 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
         
-      # --- NUEVO: Determinar el Repositorio de ECR (qa o prod) ---
+      # --- NUEVO: Determinar el Repositorio de ECR (qa o prod) --- AAAA
       - name: Set ECR Repository Name
         id: set_repo_name
         run: |
