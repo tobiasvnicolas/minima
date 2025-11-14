@@ -1,5 +1,6 @@
 -- Base de Datos: nom_ape_gen
-
+CREATE DATABASE nom_ape_gen;
+USE nom_ape_gen;
 -- 1. CREACIÓN DE LAS TABLAS
 
 -- Tabla para almacenar los países
@@ -53,31 +54,31 @@ CREATE TABLE Apellido_Pais (
 
 -- Insertar Géneros
 INSERT INTO Genero (Nombre_Genero) VALUES
-('Masculino'),
-('Femenino'),
-('No Binario');
+('QA_Masculino'),
+('QA_Femenino'),
+('QA_No Binario');
 
 -- Insertar Países
 INSERT INTO Pais (Nombre_Pais) VALUES
-('España'),
-('México'),
-('Alemania');
+('QA_España'),
+('QA_México'),
+('QA_Alemania');
 
 -- Insertar Apellidos
 INSERT INTO Apellido (Apellido) VALUES
-('García'),     -- Común en España y México
-('López'),      -- Común en España y México
-('Müller'),     -- Común en Alemania
-('Fernández');  -- Común solo en España
+('QA_García'),     -- Común en España y México
+('QA_López'),      -- Común en España y México
+('QA_Müller'),     -- Común en Alemania
+('QA_Fernández');  -- Común solo en España
 
 -- Insertar Nombres (asociados a Género)
 -- ID_Genero: 1=Masculino, 2=Femenino
 INSERT INTO Nombre (Nombre, ID_Genero) VALUES
-('David', 1),    -- Masculino
-('Santiago', 1), -- Masculino
-('Ana', 2),      -- Femenino
-('Sofía', 2),    -- Femenino
-('Kai', 3);      -- No Binario
+('QA_David', 1),    -- Masculino
+('QA_Santiago', 1), -- Masculino
+('QA_Ana', 2),      -- Femenino
+('QA_Sofía', 2),    -- Femenino
+('QA_Kai', 3);      -- No Binario
 
 -- 3. POBLAR TABLAS DE UNIÓN (RELACIONES)
 
