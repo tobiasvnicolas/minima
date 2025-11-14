@@ -13,8 +13,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4 # Necesario para obtener el código
         with:
-          # Le decimos a checkout que use la última versión de la rama
-          ref: ${{ github.event.workflow_run.head_branch }}
+          # FORZAMOS EL CHECKOUT AL SHA DEL COMMIT QUE EJECUTÓ EL CI
+          ref: ${{ github.event.workflow_run.head_sha }}
           
       # 1. Obtener la TAG del commit que disparó el CI/CD
       - name: Get SHA Tag
@@ -56,8 +56,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          # Le decimos a checkout que use la última versión de la rama --- AAAA
-          ref: ${{ github.event.workflow_run.head_branch }}
+          # FORZAMOS EL CHECKOUT AL SHA DEL COMMIT QUE EJECUTÓ EL CI
+          ref: ${{ github.event.workflow_run.head_sha }}
           
       # 1. Obtener la TAG del commit
       - name: Get SHA Tag
