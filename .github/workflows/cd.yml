@@ -13,7 +13,7 @@ jobs:
       name: QA
       url: http://minima-qa-alb-474956859.us-east-2.elb.amazonaws.com
     steps:
-      - uses: actions/checkout@v4 # Necesario para obtener el código --- AAAA
+      - uses: actions/checkout@v4 # Necesario para obtener el código
         with:
           # FORZAMOS EL CHECKOUT AL SHA DEL COMMIT QUE EJECUTÓ EL CI
           ref: ${{ github.event.workflow_run.head_sha }}
