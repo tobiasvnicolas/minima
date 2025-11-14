@@ -28,12 +28,17 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-2
 
+      # 1.5. Descargar la definición de tarea actual de QA
+      - name: Download QA task definition
+        run: |
+          aws ecs describe-task-definition --task-definition minima-task-definition:1 \
+            --query taskDefinition > task-definition-qa.json
+
       # 2. Despliegue de QA: Inyecta la nueva imagen y actualiza el servicio
       - name: Deploy new images to ECS QA
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
-          # VALOR REAL DE QA TASK DEFINITION
-          task-definition: minima-task-definition:1 
+          task-definition: task-definition-qa.json 
           service: qa-service             
           cluster: qa-cluster             
           # Usamos el repo 'qa' y el tag SHA
@@ -74,12 +79,17 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-2
           
+      # 1.5. Descargar la definición de tarea actual de Prod
+      - name: Download Prod task definition
+        run: |
+          aws ecs describe-task-definition --task-definition minima-prod-task-definition:4 \
+            --query taskDefinition > task-definition-prod.json
+          
       # 2. Despliegue de Prod: Inyecta la nueva imagen y actualiza el servicio
       - name: Deploy new images to ECS Prod
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
-          # ARN REAL DE PROD TASK DEFINITION
-          task-definition: "arn:aws:ecs:us-east-2:192626564340:task-definition/minima-prod-task-definition:4"
+          task-definition: task-definition-prod.json
           service: prod-service
           cluster: prod-cluster 
           # Usamos el repo 'prod' y el tag SHA
