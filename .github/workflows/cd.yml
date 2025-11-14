@@ -53,7 +53,7 @@ jobs:
           
       # 2.5. Añadimos una pausa para asegurar que el ALB marque la tarea como saludable
       - name: Wait for service to stabilize
-        run: sleep 30
+        run: sleep 90
           
       # 3. Health check QA
       - name: Health check QA
