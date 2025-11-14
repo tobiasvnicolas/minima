@@ -16,11 +16,6 @@ jobs:
           # Le decimos a checkout que use el SHA exacto del commit que disparó el CI
           ref: ${{ github.event.workflow_run.head_sha }}
           
-      # El paso Get SHA Tag ya no sería estrictamente necesario para el checkout, pero se mantiene para la variable IMAGE_TAG
-      - name: Get SHA Tag
-        id: get_sha
-        run: echo "IMAGE_TAG=$(jq -r '.head_sha' $GITHUB_EVENT_PATH)" >> $GITHUB_ENV
-      
       # 1. Obtener la TAG del commit que disparó el CI/CD
       - name: Get SHA Tag
         id: get_sha
@@ -64,11 +59,6 @@ jobs:
           # Le decimos a checkout que use el SHA exacto del commit que disparó el CI
           ref: ${{ github.event.workflow_run.head_sha }}
           
-      # El paso Get SHA Tag ya no sería estrictamente necesario para el checkout, pero se mantiene para la variable IMAGE_TAG
-      - name: Get SHA Tag
-        id: get_sha
-        run: echo "IMAGE_TAG=$(jq -r '.head_sha' $GITHUB_EVENT_PATH)" >> $GITHUB_ENV
-      
       # 1. Obtener la TAG del commit
       - name: Get SHA Tag
         id: get_sha
