@@ -79,7 +79,7 @@ jobs:
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           # ARN REAL DE PROD TASK DEFINITION
-          task-definition: arn:aws:ecs:us-east-2:192626564340:task-definition/minima-prod-task-definition:4
+          task-definition: "arn:aws:ecs:us-east-2:192626564340:task-definition/minima-prod-task-definition:4"
           service: prod-service
           cluster: prod-cluster 
           # Usamos el repo 'prod' y el tag SHA
